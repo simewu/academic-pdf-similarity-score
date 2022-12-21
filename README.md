@@ -16,23 +16,15 @@ To use UI to select the PDF files with a verbose and pretty-printed output, incl
 ```
 python3 run.py
 ```
-or double-click run.bat for Windows users.
-
----
-
-To automate computing the similarity and only print the similarity score (for usage by a machine) use:
+To automate computing the similarity and only output the similarity score (for usage by a machine) use:
 ```
 python3 run.py file1.pdf file2.pdf
 ```
 
 ## Example output:
-> python3 run.py example_paper_1_bitcoin.pdf example_paper_2_ethereum.pdf
->
-> 40.84857950319798%
->
 > python3 run.py
 > 
-> Select the primary PDF file:
+> Select the baseline PDF file:
 > 
 > > File 1  -  example_paper_1_bitcoin.pdf
 > > 
@@ -41,7 +33,7 @@ python3 run.py file1.pdf file2.pdf
 > Please select a file (1 to 2): 1
 > 
 > 
-> Select the baseline PDF file:
+> Select the primary PDF file:
 > 
 > > File 1  -  example_paper_1_bitcoin.pdf
 > > 
@@ -51,7 +43,7 @@ python3 run.py file1.pdf file2.pdf
 > 
 > [WORD DIFF]
 > 
-> Most used words in primary paper: [MOST COMMON WORDS]
+> Most used words in primary paper: the, to, a, of, and, block, is, z, hash, be, in, it, transaction, p, by, that, transactions, for, as, nodes, with, chain, on, an, can, attacker, if, network, we, proof-of-work, q, will, are, not, blocks, he, one, honest, owner, from, they, k, without, but, this, public, key, new, s, tx, need, all, -, probability, system, would, has, each, timestamp, trusted, cpu, than, value, problem, them, longest, only, at, more, coin, next, or, after, coins, time, nonce, up, merkle, payments, party, using, proof, power, long, majority, were, any, verify, have, work, node, prev, sender, peer-to-peer, electronic, solution, still, make, their, information, could, mint, double, which, its, back, when, number, working, incentive, root, header, privacy, digital, third, into, while, trust, model, must, payment, other, server, previous, first, such, get, before, once, change, then, catch, branch, his, linking, poisson, i, w, signatures, required, double-spending, generate, effort, parties, enough, based, there, accepted, no, control, payee, every, running, way, our, item, average, until, added, per, accept, some, amount, computer, security, made, being, pages, directly, financial, propose, cannot, redoing, messages, broadcast, basis, what, works, possible, since, increases, off, two, protect, order, secure, money, sign, later, confirm, single, history, received, needs, signature, private, hashed, zero, bits, been, also, many, exponentially, finds, broadcasts, spent, consider, keep, may, receive, case, becomes, longer, do, reach, starts, circulation, containing, rules, him, own, tree, should, verification, place, see, invalid, inputs, never, ever
 > 
 > 
 > > Primary file word count: 3441
@@ -72,4 +64,4 @@ python3 run.py file1.pdf file2.pdf
 > > 
 
 ## Additionally
-For researchers, consider using the contents from file_1.txt (the primary PDF) to further analyze your document.
+For researchers, consider using the contents from file_2.txt (the primary PDF) to further analyze the document.

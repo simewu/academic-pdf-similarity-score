@@ -127,22 +127,23 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 	fileNames = []
 
 	if fileName1 is None:
-		print()
-		print(color('white', 'cyan', ''.center(width)))
-		print(color('white', 'cyan', 'Select the primary PDF file:'.center(width)))
-		print(color('white', 'cyan', ''.center(width)))
+		print(color('white', 'yellow', ''.center(width)))
+		print(color('white', 'yellow', 'Select the baseline PDF file:'.center(width)))
+		print(color('white', 'yellow', ''.center(width)))
 		fileName1 = selectFile(r'.*\.pdf', r'', False)
 		assert fileName1 is not None, 'Please select a valid file'
 	fileNames.append(fileName1)
 
-
 	if fileName2 is None:
-		print(color('white', 'yellow', ''.center(width)))
-		print(color('white', 'yellow', 'Select the baseline PDF file:'.center(width)))
-		print(color('white', 'yellow', ''.center(width)))
+		print()
+		print(color('white', 'cyan', ''.center(width)))
+		print(color('white', 'cyan', 'Select the primary PDF file:'.center(width)))
+		print(color('white', 'cyan', ''.center(width)))
 		fileName2 = selectFile(r'.*\.pdf', r'', False)
 		assert fileName2 is not None, 'Please select a valid file'
+
 	fileNames.append(fileName2)
+
 
 	for i, fileName in enumerate(fileNames):
 		contents = ''
