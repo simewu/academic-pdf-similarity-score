@@ -185,15 +185,15 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 		contents = re.sub(r'[“”]', '"', contents)
 		contents = re.sub(r'’', '\'', contents)
 
-		file = open(f'File{i + 1}.txt', 'w', encoding='utf8', errors='ignore')
+		file = open(f'file_{i + 1}.txt', 'w', encoding='utf8', errors='ignore')
 		file.writelines(contents)
 		file.close()
 
 		stats[f'file{i + 1}_word_count'], stats[f'file{i + 1}_most_used_words'] = wordDistribution(contents)
 		
 
-	terminal('git diff file1.txt file2.txt --minimal --ignore-all-space --word-diff=porcelain --output diff.txt')
-	differences = open('diff.txt', 'r', encoding='utf8', errors='ignore')
+	terminal('git diff --minimal --ignore-all-space --word-diff=porcelain --no-index --output file_diff.txt file_1.txt file_2.txt')
+	differences = open('file_diff.txt', 'r', encoding='utf8', errors='ignore')
 	diffStarted = False
 	for line in differences:
 		line = line.strip()
