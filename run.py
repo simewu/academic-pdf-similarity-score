@@ -209,10 +209,12 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 			wordCount, _ = wordDistribution(line[1:], None)
 			stats['words_added'] += wordCount
 			if verbose: print(color('green', 'black', line))
-		if line.startswith('-'):
+		elif line.startswith('-'):
 			wordCount, _ = wordDistribution(line[1:], None)
 			stats['words_removed'] += wordCount
 			if verbose: print(color('red', 'black', line))
+		else:
+			if verbose: print(line)
 
 	baseline = stats['file2_word_count']
 	added = stats['words_added']
