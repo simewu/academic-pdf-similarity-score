@@ -23,6 +23,9 @@ python3 run.py example_paper_1_bitcoin.pdf example_paper_2_ethereum.pdf
 
 ## Example output:
 > python3 run.py file1.pdf file2.pdf
+> 
+> > 40.84857950319798%
+> 
 > python3 run.py
 > 
 > Select the baseline PDF file:
