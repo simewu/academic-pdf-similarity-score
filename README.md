@@ -18,11 +18,11 @@ python3 run.py
 ```
 To automate computing the similarity and only output the similarity score (for usage by a machine) use:
 ```
-python3 run.py example_paper_1_bitcoin.pdf example_paper_2_ethereum.pdf
+python3 run.py file1.pdf file2.pdf
 ```
 
 ## Example output:
-> python3 run.py file1.pdf file2.pdf
+> python3 run.py example_paper_1_bitcoin.pdf example_paper_2_ethereum.pdf
 > 
 > > 40.84857950319798%
 > 
