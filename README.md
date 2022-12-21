@@ -16,7 +16,11 @@ To use UI to select the PDF files with a verbose and pretty-printed output, incl
 ```
 python3 run.py
 ```
-To automate computing the similarity and only output the similarity score (for usage by a machine) use:
+or double-click run.bat for Windows users.
+
+---
+
+To automate computing the similarity and only print the similarity score (for usage by a machine) use:
 ```
 python3 run.py file1.pdf file2.pdf
 ```
@@ -64,4 +68,4 @@ python3 run.py file1.pdf file2.pdf
 > > 
 
 ## Additionally
-For researchers, consider using the contents from file_1.txt (the primary PDF) to further analyze the document.
+For researchers, consider using the contents from file_1.txt (the primary PDF) to further analyze your document.
