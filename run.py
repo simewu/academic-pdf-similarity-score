@@ -4,6 +4,9 @@ import os
 import re
 import sys
 
+# Attempt to repair word-breaks, fix paragraphs, white-space, and remove author blocks
+attempt_to_improve_formatting = True
+
 stats = {'words_added': 0, 'words_removed': 0, 'file1_word_count': 0, 'file2_word_count': 0, 'file1_most_used_words': '', 'file2_most_used_words': ''}
 
 def terminal(cmd):
@@ -151,40 +154,39 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 			for page in doc:
 				contents += page.get_text()
 
-		# Restore any workd-breaks
-		# First we search for any split words that need the a hyphen
-		matches = re.findall(r'([A-Za-z0-9\.]+)-\n([A-Za-z0-9\.]+)', contents)
-		for match in matches:
-			word1 = match[0].lower()
-			word2 = match[1].lower()
-			if (word1 in wordlist and word2 in wordlist) or (word1 + '-' + word2) in wordlist:
-				contents = contents.replace(match[0] + '-\n' + match[1], match[0] + '-' + match[1])
-		# Then combine all auto-broken words
-		contents = re.sub(r'-\n', '', contents)
-
-		# Remove any extra spaces
-		contents = re.sub(r'\s*\n\s*', '\n', contents)
-		# Remove numbers without context
-		contents = re.sub(r'\n([0-9\.\s]+\n)+', '\n', contents)
-		# Remove author names on each page
-		contents = re.sub(r'\n([A-Z\.]+ [A-Z][a-z]+,? )*and ([A-Z\.]+ [A-Z][a-z]+)\n', '\n', contents)
-		# Restore mid-sentence breaks
-		contents = re.sub(r'(\b[a-z\-]+)\n', '\\1 ', contents)
-		contents = re.sub(r'\n([a-z\-]+)', ' \\1', contents)
-		contents = re.sub(r'(\. [A-Z][a-z\-]*)\n', '\\1 ', contents)
-		contents = re.sub(r'([\.:,=])\n', '\\1 ', contents)
-		contents = re.sub(r'([0-9])\n', '\\1 ', contents)
-		contents = re.sub(r'\n\.', '.', contents)
-		# Merge any titles together
-		contents = re.sub(r'([A-Z][a-z\-]*)\n([A-Z][a-z\-]*)', '\\1 \\2', contents)
-		contents = re.sub(r'([A-Z][a-z\-]*)\n', '\\1: ', contents)
-		contents = re.sub(r'\n([A-Z][a-z\-]*)', ': \\1', contents)
-		# Remove any double spaces
-		contents = re.sub(r' {2,}', ' ', contents)
-
-		# Fix other unicode characters
-		contents = re.sub(r'[“”]', '"', contents)
-		contents = re.sub(r'’', '\'', contents)
+		if attempt_to_improve_formatting:
+			# Restore any word-breaks
+			# First we search for any split words that need the a hyphen
+			matches = re.findall(r'([A-Za-z0-9\.]+)-\n([A-Za-z0-9\.]+)', contents)
+			for match in matches:
+				word1 = match[0].lower()
+				word2 = match[1].lower()
+				if (word1 in wordlist and word2 in wordlist) or (word1 + '-' + word2) in wordlist:
+					contents = contents.replace(match[0] + '-\n' + match[1], match[0] + '-' + match[1])
+			# Then combine all auto-broken words
+			contents = re.sub(r'-\n', '', contents)
+			# Remove any extra spaces
+			contents = re.sub(r'\s*\n\s*', '\n', contents)
+			# Remove numbers without context
+			contents = re.sub(r'\n([0-9\.\s]+\n)+', '\n', contents)
+			# Remove author names on each page
+			contents = re.sub(r'\n([A-Z\.]+ [A-Z][a-z]+,? )*and ([A-Z\.]+ [A-Z][a-z]+)\n', '\n', contents)
+			# Restore mid-sentence breaks
+			contents = re.sub(r'(\b[a-z\-]+)\n', '\\1 ', contents)
+			contents = re.sub(r'\n([a-z\-]+)', ' \\1', contents)
+			contents = re.sub(r'(\. [A-Z][a-z\-]*)\n', '\\1 ', contents)
+			contents = re.sub(r'([\.:,=])\n', '\\1 ', contents)
+			contents = re.sub(r'([0-9])\n', '\\1 ', contents)
+			contents = re.sub(r'\n\.', '.', contents)
+			# Merge any titles together
+			contents = re.sub(r'([A-Z][a-z\-]*)\n([A-Z][a-z\-]*)', '\\1 \\2', contents)
+			contents = re.sub(r'([A-Z][a-z\-]*)\n', '\\1: ', contents)
+			contents = re.sub(r'\n([A-Z][a-z\-]*)', ': \\1', contents)
+			# Remove any double spaces
+			contents = re.sub(r' {2,}', ' ', contents)
+			# Fix other unicode characters
+			contents = re.sub(r'[“”]', '"', contents)
+			contents = re.sub(r'’', '\'', contents)
 
 		file = open(f'file_{i + 1}.txt', 'w', encoding='utf8', errors='ignore')
 		file.writelines(contents)
