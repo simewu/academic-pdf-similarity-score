@@ -1,4 +1,4 @@
-# Compute the Similarity Between PDFs
+# Compute the Similarity Between Two PDFs
 This program takes in two PDF files (preferrably academic papers), converts them into file_1.txt and file_2.txt, then uses:
 
 ```
