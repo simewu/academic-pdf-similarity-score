@@ -20,16 +20,12 @@ def wordDistribution(string, dictionarySize = 220):
 	histogram = {}
 	for word in words:
 		word = word.lower()
-		if len(word) == 0: continue
-		match = re.search('[^a-z\-]*([a-z\-]+)[^a-z\-]*', word)
-		if match is not None:
-			wordCount += 1
-			word = match.group(1)
-			if dictionarySize is not None:
-				if word not in histogram:
-					histogram[word] = 1
-				else:
-					histogram[word] += 1
+		wordCount += 1
+		if dictionarySize is not None:
+			if word not in histogram:
+				histogram[word] = 1
+			else:
+				histogram[word] += 1
 
 	if dictionarySize is not None:
 		histogram = dict(sorted(histogram.items(), key=lambda item: item[1], reverse=True))
@@ -152,8 +148,11 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 
 	for i, fileName in enumerate(fileNames):
 		contents = ''
+		numWords = 0
 		with fitz.open(fileName) as doc:
 			for page in doc:
+				page.clean_contents(sanitize=True)
+				numWords += len(page.get_text_words())
 				contents += page.get_text()
 
 		if attempt_to_improve_formatting:
@@ -204,7 +203,9 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 
 		stats[f'file{i + 1}_word_count'], stats[f'file{i + 1}_most_used_words'] = wordDistribution(contents)
 		
+		print('Number of words:', numWords, 'after optimization:', stats[f'file{i + 1}_word_count'])	
 
+	print()
 	terminal('git diff --minimal --ignore-all-space --word-diff=porcelain --no-index --output file_diff.txt file_1.txt file_2.txt')
 	differences = open('file_diff.txt', 'r', encoding='utf8', errors='ignore')
 	diffStarted = False
@@ -245,7 +246,7 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 
 	if verbose:
 		print()
-		print(color('yellow', 'black', 'Most used words in primary paper: ') + stats['file1_most_used_words'])
+		print(color('yellow', 'black', 'Most used words in the primary paper: ') + stats['file1_most_used_words'])
 		print()
 		print(color('white', 'purple', ''.center(width)))
 		print(color('yellow', 'purple', f'Baseline file word count: {stats["file1_word_count"]}'.center(width)))
