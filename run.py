@@ -242,7 +242,6 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 		similarity = max(similar / primary, similar / baseline)
 	else:
 		similarity = 0
-	similarity *= 100
 
 	if verbose:
 		print()
@@ -257,7 +256,7 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 		print(color('white', 'purple', ''.center(width)))
 		print(color('red', 'purple', f'max(similar/primary, similar/baseline)'.center(width)))
 		print(color('white', 'purple', f'--------------------------------------'.center(width)))
-		print(color('white', 'purple', f'Similarity score: {similarity}%'.center(width)))
+		print(color('white', 'purple', f'Similarity score: {similarity * 100}%'.center(width)))
 		print(color('white', 'purple', f'--------------------------------------'.center(width)))
 		print(color('white', 'purple', ''.center(width)))
 	return similarity
@@ -266,7 +265,7 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 if len(sys.argv) == 3:
 	fileName1 = sys.argv[1]
 	fileName2 = sys.argv[2]
-	output = str(similarity(fileName1, fileName2, False)) + '%'
+	output = str(similarity(fileName1, fileName2, False))
 	print(output)
 else:
 	similarity()

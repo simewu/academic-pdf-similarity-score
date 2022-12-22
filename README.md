@@ -29,7 +29,7 @@ python3 run.py file1.pdf file2.pdf
 ```
 > python3 run.py example_paper_1_bitcoin.pdf example_paper_2_ethereum.pdf
 
-14.45993031358885%
+0.1445993031358885
 
 > python3 run.py
 
