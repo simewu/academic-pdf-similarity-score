@@ -1,4 +1,6 @@
-*.txt
+file_1.txt
+file_2.txt
+file_diff.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
