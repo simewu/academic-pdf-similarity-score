@@ -6,13 +6,14 @@ import sys
 
 # Attempt to repair word-breaks, fix paragraphs, white-space, and remove author blocks
 attempt_to_improve_formatting = True
+useColors = True
 
-stats = {'words_added': 0, 'words_removed': 0, 'file1_word_count': 0, 'file2_word_count': 0, 'file1_most_used_words': '', 'file2_most_used_words': ''}
+stats = {'similar_words': 0, 'words_added': 0, 'words_removed': 0, 'file1_word_count': 0, 'file2_word_count': 0, 'file1_most_used_words': '', 'file2_most_used_words': ''}
 
 def terminal(cmd):
 	return os.popen(cmd).read()
 
-def wordDistribution(string, dictionarySize = 230):
+def wordDistribution(string, dictionarySize = 220):
 	wordCount = 0
 	wordDist = ''
 	words = string.split()
@@ -86,6 +87,7 @@ def selectFile(inclusionRegex, exclusionRegex = '', subdirs = False):
 # - print(color('black', 'white', 'Inverted') + ' Regular')
 # - print(color('black', 'white') + 'Inverted' + color() + ' Regular')
 def color(foreground = '', background = '', message = ''):
+	if not useColors: return message
 	fg = {
 		'red': '1;31',
 		'green': '1;32',
@@ -168,9 +170,9 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 			# Remove any extra spaces
 			contents = re.sub(r'\s*\n\s*', '\n', contents)
 			# Remove numbers without context
-			contents = re.sub(r'\n([0-9\.\s]+\n)+', '\n', contents)
+			#contents = re.sub(r'\n([0-9\.\s]+\n)+', '\n', contents)
 			# Remove author names on each page
-			contents = re.sub(r'\n([A-Z\.]+ [A-Z][a-z]+,? )*and ([A-Z\.]+ [A-Z][a-z]+)\n', '\n', contents)
+			#contents = re.sub(r'\n([A-Z\.]+ [A-Z][a-z]+,? )*and ([A-Z\.]+ [A-Z][a-z]+)\n', '\n', contents)
 			# Restore mid-sentence breaks
 			contents = re.sub(r'(\b[a-z\-]+)\n', '\\1 ', contents)
 			contents = re.sub(r'\n([a-z\-]+)', ' \\1', contents)
@@ -184,9 +186,17 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 			contents = re.sub(r'\n([A-Z][a-z\-]*)', ': \\1', contents)
 			# Remove any double spaces
 			contents = re.sub(r' {2,}', ' ', contents)
-			# Fix other unicode characters
-			contents = re.sub(r'[“”]', '"', contents)
-			contents = re.sub(r'’', '\'', contents)
+			# Fix/normalize other unicode characters
+			contents = re.sub(r'[“”„‟]', '"', contents)
+			contents = re.sub(r'[-־᠆‐‑‒\―⁻₋−⸺⸻﹘﹣－⁃–—]', '-', contents)
+			contents = re.sub(r'[＋⁺]', '+', contents)
+			contents = re.sub(r'[⁄∕]', '/', contents)
+			contents = re.sub(r'[˜⁓∼∽∿〜～]', '~', contents)
+			contents = re.sub(r'‵′’՚Ꞌꞌ＇‘’‚‛', '\'', contents)
+			contents = re.sub(r'´', '`', contents)
+			contents = re.sub(r'″‶', '\'\'', contents)
+			contents = re.sub(r'‴‷', '\'\'\'', contents)
+			contents = re.sub(r'⁗', '\'\'\'\'', contents)
 
 		file = open(f'file_{i + 1}.txt', 'w', encoding='utf8', errors='ignore')
 		file.writelines(contents)
@@ -198,6 +208,7 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 	terminal('git diff --minimal --ignore-all-space --word-diff=porcelain --no-index --output file_diff.txt file_1.txt file_2.txt')
 	differences = open('file_diff.txt', 'r', encoding='utf8', errors='ignore')
 	diffStarted = False
+	numDiffLines = 0
 	for line in differences:
 		line = line.strip()
 		if not diffStarted:
@@ -214,14 +225,23 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 			stats['words_removed'] += wordCount
 			if verbose: print(color('red', 'black', line))
 		else:
+			wordCount, _ = wordDistribution(line, None)
+			stats['similar_words'] += wordCount
 			if verbose: print(line)
+		numDiffLines += 1
 
-	baseline = stats['file2_word_count']
-	added = stats['words_added']
-	removed = stats['words_removed']
-	if baseline != 0:
-		similarity = 1 - (added + removed) / (baseline * 2)
-	else: similarity = 0
+	baseline = stats['file1_word_count']
+	primary = stats['file2_word_count']
+	#added = stats['words_added']
+	#removed = stats['words_removed']
+	similar = stats['similar_words']
+	if numDiffLines == 0:
+		similar = max(baseline, primary)
+	
+	if primary != 0 and baseline != 0:
+		similarity = max(similar / primary, similar / baseline)
+	else:
+		similarity = 0
 	similarity *= 100
 
 	if verbose:
@@ -229,12 +249,13 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 		print(color('yellow', 'black', 'Most used words in primary paper: ') + stats['file1_most_used_words'])
 		print()
 		print(color('white', 'purple', ''.center(width)))
-		print(color('yellow', 'purple', f'Primary file word count: {stats["file1_word_count"]}'.center(width)))
-		print(color('yellow', 'purple', f'Baseline file word count: {stats["file2_word_count"]}'.center(width)))
+		print(color('yellow', 'purple', f'Baseline file word count: {stats["file1_word_count"]}'.center(width)))
+		print(color('yellow', 'purple', f'Primary file word count: {stats["file2_word_count"]}'.center(width)))
 		print(color('yellow', 'purple', f'Added words: {stats["words_added"]}'.center(width)))
 		print(color('yellow', 'purple', f'Removed words: {stats["words_removed"]}'.center(width)))
+		print(color('yellow', 'purple', f'Similar words: {stats["similar_words"]}'.center(width)))
 		print(color('white', 'purple', ''.center(width)))
-		print(color('red', 'purple', f'1 - (added + removed) / (baseline * 2)'.center(width)))
+		print(color('red', 'purple', f'max(similar/primary, similar/baseline)'.center(width)))
 		print(color('white', 'purple', f'--------------------------------------'.center(width)))
 		print(color('white', 'purple', f'Similarity score: {similarity}%'.center(width)))
 		print(color('white', 'purple', f'--------------------------------------'.center(width)))
