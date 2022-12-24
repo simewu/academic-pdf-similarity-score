@@ -27,7 +27,7 @@ python3 run.py file1.pdf file2.pdf
 
 ## Example output:
 ```
-> python3 run.py example_paper_1_bitcoin.pdf example_paper_2_ethereum.pdf
+> python3 run.py example_1_bitcoin_nakamoto.pdf example_2_bitcoin_wright.pdf
 
 0.9874599008457277
 
