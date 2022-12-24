@@ -199,18 +199,21 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 				# First we search for any split words that need the a hyphen
 				matches = re.findall(r'([A-Za-z0-9\.]+)-\n([A-Za-z0-9\.]+)', contents)
 				for match in matches:
-					word1 = match[0].lower()
-					word2 = match[1].lower()
+					word1 = match[0].lower().rstrip()
+					word2 = match[1].lower().lstrip()
 					if (word1 in wordlist and word2 in wordlist) or (word1 + '-' + word2) in wordlist:
 						contents = contents.replace(match[0] + '-\n' + match[1], match[0] + '-' + match[1])
 				# Then combine all auto-broken words
 				contents = re.sub(r'-\n', '', contents)
+				contents = re.sub(r'([a-zA-Z])\s*-\s*([a-zA-Z])', '\\1-\\2', contents)
 				# Remove any extra spaces
 				contents = re.sub(r'\s*\n\s*', '\n', contents)
 				# Remove numbers without context
 				#contents = re.sub(r'\n([0-9\.\s]+\n)+', '\n', contents)
 				# Remove author names on each page
 				#contents = re.sub(r'\n([A-Z\.]+ [A-Z][a-z]+,? )*and ([A-Z\.]+ [A-Z][a-z]+)\n', '\n', contents)
+				contents = re.sub(r'Electronic copy available at: .*', '', contents)
+				contents = re.sub(r'Authorized licensed use limited to: .*', '', contents)
 				# Restore mid-sentence breaks
 				contents = re.sub(r'(\b[a-z\-]+)\n', '\\1 ', contents)
 				contents = re.sub(r'\n([a-z\-]+)', ' \\1', contents)
