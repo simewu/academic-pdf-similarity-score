@@ -1,5 +1,7 @@
-from unidecode import unidecode # Install using: pip install PyMuPDF
-import fitz # Install using: pip install Unidecode
+#!/usr/bin/python3
+
+from unidecode import unidecode # Install using: pip install Unidecode
+import fitz # Install using: pip install PyMuPDF
 import getopt
 import importlib.machinery
 import math
@@ -179,9 +181,14 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 		else:
 			with fitz.open(fileName) as doc:
 				for page in doc:
-					page.clean_contents(sanitize=True)
-					numWords += len(page.get_text_words())
-					contents += page.get_text()
+					try:
+						page.clean_contents(sanitize=True)
+						numWords += len(page.get_text_words())
+						contents += page.get_text()
+					except AttributeError:
+						page._cleanContents()
+						numWords += len(page.getTextWords())
+						contents += page.getText()
 
 		if improveFormatting:
 			# Optimize until it cannot optimize any further
@@ -232,7 +239,10 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 			print('Number of words:', numWords, 'after optimization:', stats[f'file{i + 1}_word_count'])
 			print()
 
-	terminal('git diff --minimal --ignore-all-space --word-diff=porcelain --no-index --output file_diff.txt file_1.txt file_2.txt')
+	if os.name == 'nt':
+		terminal('git diff --minimal --ignore-all-space --word-diff=porcelain --output file_diff.txt file_1.txt file_2.txt')
+	else:
+		terminal('git diff --minimal --ignore-all-space --word-diff=porcelain --no-index file_1.txt file_2.txt > file_diff.txt')
 	differences = open('file_diff.txt', 'r', encoding='utf8', errors='ignore')
 	diffStarted = False
 	numDiffLines = 0
