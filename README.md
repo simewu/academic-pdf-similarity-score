@@ -18,7 +18,7 @@ To use the UI to select the PDF files with a verbose and pretty-printed output, 
 ```console
 python3 run.py
 ```
-(Windows users can double-click run.bat).
+(Windows users can double-click run.bat, and Linux users can double-click on run.sh).
 
 To automate computing the similarity and only output the similarity score (for usage by a machine) use:
 ```console
