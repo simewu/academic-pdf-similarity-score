@@ -9,11 +9,12 @@ import os
 import re
 import sys
 
-# Attempt to repair word-breaks, fix paragraphs, white-space, and normalize strange symbols
+# Repair word-breaks, fix paragraphs, white-space, and normalize strange symbols
 improveFormatting = True
+removePublicationPrints = True
 
 supportsColor = importlib.machinery.SourceFileLoader('supportsColor','supports-color-python/supports_color/__init__.py').load_module()
-useTerminalColors = supportsColor.supportsColor.stdout
+useTerminalColors = bool(supportsColor.supportsColor.stdout)
 
 # Gets filled with data values as the script runs
 stats = {'similar_words': 0, 'words_added': 0, 'words_removed': 0, 'file1_word_count': 0, 'file2_word_count': 0, 'file1_most_used_words': '', 'file2_most_used_words': ''}
@@ -65,7 +66,7 @@ def wordDistribution(string, dictionarySize = 100):
 	return wordCount, wordDist
 
 # Given two regular expressions, list the files that match/don't match it, and ask the user to select from them
-def selectFile(inclusionRegex, exclusionRegex = '', subdirs = False):
+def selectFile(inclusionRegex, exclusionRegex = r'', subdirs = False):
 	files = []
 	if subdirs:
 		for (dirpath, dirnames, filenames) in os.walk('.'):
@@ -76,7 +77,7 @@ def selectFile(inclusionRegex, exclusionRegex = '', subdirs = False):
 					files.append(path)
 	else:
 		for file in os.listdir(os.curdir):
-			if os.path.isfile(file) and bool(re.match(inclusionRegex, file)):
+			if os.path.isfile(file) and bool(re.match(inclusionRegex, file)) and not bool(re.match(exclusionRegex, file)):
 				files.append(file)
 	print()
 	if len(files) == 0:
@@ -158,8 +159,8 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 		print(color('white', 'yellow', ''.center(width)))
 		print(color('white', 'yellow', 'Select the baseline PDF/TXT file:'.center(width)))
 		print(color('white', 'yellow', ''.center(width)))
-		fileName1 = selectFile(r'.*\.(pdf|txt)', r'', False)
-		assert fileName1 is not None, 'No file was selected. Please make sure that there is a PDF or text file in the directory of this script.'
+		fileName1 = selectFile(r'.*\.(pdf|txt)', r'(academic_wordlist\.txt|file_diff\.txt)', False)
+		assert fileName1 is not None, color('red', 'black', 'No file was selected. Please make sure that there is a PDF or text file in the directory of this script.')
 	fileNames.append(fileName1)
 
 
@@ -168,9 +169,8 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 		print(color('white', 'cyan', ''.center(width)))
 		print(color('white', 'cyan', 'Select the primary PDF/TXT file:'.center(width)))
 		print(color('white', 'cyan', ''.center(width)))
-		fileName2 = selectFile(r'.*\.(pdf|txt)', r'', False)
-		assert fileName2 is not None, 'No file was selected. Please make sure that there is a PDF or text file in the directory of this script.'
-
+		fileName2 = selectFile(r'.*\.(pdf|txt)', r'(academic_wordlist\.txt|file_diff\.txt)', False)
+		assert fileName2 is not None, color('red', 'black', 'No file was selected. Please make sure that there is a PDF or text file in the directory of this script.')
 	fileNames.append(fileName2)
 
 	for i, fileName in enumerate(fileNames):
@@ -210,10 +210,11 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 				contents = re.sub(r'\s*\n\s*', '\n', contents)
 				# Remove numbers without context
 				#contents = re.sub(r'\n([0-9\.\s]+\n)+', '\n', contents)
-				# Remove author names on each page
-				#contents = re.sub(r'\n([A-Z\.]+ [A-Z][a-z]+,? )*and ([A-Z\.]+ [A-Z][a-z]+)\n', '\n', contents)
-				contents = re.sub(r'Electronic copy available at: .*', '', contents)
-				contents = re.sub(r'Authorized licensed use limited to: .*', '', contents)
+				# Remove author names and publication prints on each page
+				if removePublicationPrints:
+					contents = re.sub(r'\n([A-Z\.]+ [A-Z][a-z]+,? )*and ([A-Z\.]+ [A-Z][a-z]+)\n', '\n', contents)
+					contents = re.sub(r'Electronic copy available at: .*', '', contents)
+					contents = re.sub(r'Authorized licensed use limited to: .*', '', contents)
 				# Restore mid-sentence breaks
 				contents = re.sub(r'(\b[a-z\-]+)\n', '\\1 ', contents)
 				contents = re.sub(r'\n([a-z\-]+)', ' \\1', contents)
@@ -223,8 +224,8 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 				contents = re.sub(r'\n\.', '.', contents)
 				# Merge any titles together
 				contents = re.sub(r'([A-Z][a-z\-]*)\n([A-Z][a-z\-]*)', '\\1 \\2', contents)
-				contents = re.sub(r'([A-Z][a-z\-]*)\n', '\\1: ', contents)
-				contents = re.sub(r'\n([A-Z][a-z\-]*)', ': \\1', contents)
+				contents = re.sub(r'([A-Z][a-z\-]*) *\n', '\\1 ', contents)
+				contents = re.sub(r'\n *([A-Z][a-z\-]*)', ' \\1', contents)
 				# Remove any double spaces
 				contents = re.sub(r' {2,}', ' ', contents)
 				# Fix/normalize other unicode characters
@@ -304,6 +305,8 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 		print(color('yellow', 'purple', f'Removed words: {stats["words_removed"]}'.center(width)))
 		print(color('yellow', 'purple', f'Similar words: {stats["similar_words"]}'.center(width)))
 		print(color('white', 'purple', ''.center(width)))
+		print(color('cyan', 'purple', f'similar/primary: {similar/primary}'.center(width)))
+		print(color('cyan', 'purple', f'similar/baseline: {similar/baseline}'.center(width)))
 		print(color('cyan', 'purple', f'similarity = max(similar/primary, similar/baseline)'.center(width)))
 		print(color('white', 'purple', ('-' * len(similarity_str)).center(width)))
 		print(color('white', 'purple', similarity_str.center(width)))

@@ -28,22 +28,23 @@ python3 run.py file1.pdf file2.pdf
 ## Example output:
 ```
 > python3 run.py example_1_bitcoin_nakamoto.pdf example_2_bitcoin_wright.pdf
-
-0.9874599008457277
+0.8582677165354331
 
 > python3 run.py
 
 Select the baseline PDF/TXT file:
-  File 1  -  academic_wordlist.txt
-  File 2  -  example_1_bitcoin_nakamoto.pdf
-  File 3  -  example_2_bitcoin_wright.pdf
-Please select a file (1 to 2): 2
+  File 1  -  example_1_bitcoin_nakamoto.pdf
+  File 2  -  example_2_bitcoin_wright.pdf
+  File 3  -  file_1.txt
+  File 4  -  file_2.txt
+Please select a file (1 to 2): 1
 
 Select the primary PDF/TXT file:
-  File 1  -  academic_wordlist.txt
-  File 2  -  example_1_bitcoin_nakamoto.pdf
-  File 3  -  example_2_bitcoin_wright.pdf
-Please select a file (1 to 2): 3
+  File 1  -  example_1_bitcoin_nakamoto.pdf
+  File 2  -  example_2_bitcoin_wright.pdf
+  File 3  -  file_1.txt
+  File 4  -  file_2.txt
+Please select a file (1 to 2): 2
 
 Bitcoin: A Peer-to-Peer Electronic Cash System
 -Satoshi Nakamoto satoshin@gmx.com www.bitcoin.org
@@ -56,13 +57,15 @@ Most used words in the primary paper: the (241), to (119), [...]
 
 Baseline file word count: 3429
 Primary file word count: 3476
-Added words: 69
-Removed words: 22
-Similar words: 3386
+Added words: 68
+Removed words: 21
+Similar words: 2943
 
+similar/primary: 0.846662830840046
+similar/baseline: 0.8582677165354331
 similarity = max(similar/primary, similar/baseline)
 --------------------------------------------------
- Similarity score: 99% (0.9874599008457277 = red) 
+ Similarity score: 86% (0.8582677165354331 = red) 
 --------------------------------------------------
 Decrease similarity by scrolling up and reducing the white/similar words in the diff
 ```
