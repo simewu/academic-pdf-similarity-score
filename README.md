@@ -60,7 +60,6 @@ similarity = max(similar/primary, similar/baseline)
  Similarity score: 15% (0.14368988633051588 = dark blue) 
 ---------------------------------------------------------
 Decrease similarity by scrolling up and reducing the white/similar words in the diff
-
 ```
 
 ## Additionally
