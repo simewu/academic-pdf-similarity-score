@@ -47,7 +47,7 @@ Please select a file (1 to 2): 3
 
 [WORD DIFF]
 
-Most used words in the primary paper: the (241), to (119), a (108), of (90), and (56), is (50), block (48), hash (42), [...]
+Most used words in the primary paper: the (241), to (119), [...]
 
 Baseline file word count: 3431
 Primary file word count: 13469
