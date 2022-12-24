@@ -63,4 +63,4 @@ Decrease similarity by scrolling up and reducing the white/similar words in the 
 ```
 
 ## Additionally
-For researchers, consider using the contents from file_2.txt (the primary PDF) to further analyze the document, e.g., Microsoft Word has some text analysis tools under Review --> Editor.
+For researchers, consider using the contents from file_2.txt (the primary PDF) to further analyze the document, e.g., Microsoft Word has some text analysis tools under Review --> Editor, and Grammarly can catch typos.
