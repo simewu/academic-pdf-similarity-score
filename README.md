@@ -14,7 +14,7 @@ similarity = similar_words / initial_word_count
 ```
 
 ## Usage
-To use UI to select the PDF files with a verbose and pretty-printed output, including the word differences and the most occuring words, use:
+To use the UI to select the PDF files with a verbose and pretty-printed output, including the word differences and the most occuring words, use:
 ```console
 python3 run.py
 ```
