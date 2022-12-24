@@ -239,10 +239,7 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 			print('Number of words:', numWords, 'after optimization:', stats[f'file{i + 1}_word_count'])
 			print()
 
-	if os.name == 'nt':
-		terminal('git diff --minimal --ignore-all-space --word-diff=porcelain --output file_diff.txt file_1.txt file_2.txt')
-	else:
-		terminal('git diff --minimal --ignore-all-space --word-diff=porcelain --no-index file_1.txt file_2.txt > file_diff.txt')
+	terminal('git diff --minimal --ignore-all-space --word-diff=porcelain --no-index file_1.txt file_2.txt > file_diff.txt')
 	differences = open('file_diff.txt', 'r', encoding='utf8', errors='ignore')
 	diffStarted = False
 	numDiffLines = 0
