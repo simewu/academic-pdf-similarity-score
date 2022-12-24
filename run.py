@@ -82,7 +82,7 @@ def selectFile(inclusionRegex, exclusionRegex = '', subdirs = False):
 	if len(files) == 0:
 		print(f'No files were found that match "{inclusionRegex}"')
 		print()
-		return ''
+		return None
 
 	for i, file in enumerate(files):
 		print('  ' + color('cyan', 'black', f'File {i + 1}  -  ') + color('yellow', 'black', file))
@@ -95,7 +95,7 @@ def selectFile(inclusionRegex, exclusionRegex = '', subdirs = False):
 		except KeyboardInterrupt:
 			sys.exit()
 		except:
-			pass
+			return None
 		if i > 0 and i <= len(files):
 			selection = files[i - 1]
 	print()
@@ -154,21 +154,22 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 		width, height = os.get_terminal_size()
 
 	fileNames = []
-	if fileName1 is None:
+	while fileName1 is None or len(fileName1) == 0:
 		print(color('white', 'yellow', ''.center(width)))
 		print(color('white', 'yellow', 'Select the baseline PDF/TXT file:'.center(width)))
 		print(color('white', 'yellow', ''.center(width)))
 		fileName1 = selectFile(r'.*\.(pdf|txt)', r'', False)
-		assert fileName1 is not None, 'Please select a valid file'
+		assert fileName1 is not None, 'No file was selected. Please make sure that there is a PDF or text file in the directory of this script.'
 	fileNames.append(fileName1)
 
-	if fileName2 is None:
+
+	while fileName2 is None or len(fileName2) == 0:
 		print()
 		print(color('white', 'cyan', ''.center(width)))
 		print(color('white', 'cyan', 'Select the primary PDF/TXT file:'.center(width)))
 		print(color('white', 'cyan', ''.center(width)))
 		fileName2 = selectFile(r'.*\.(pdf|txt)', r'', False)
-		assert fileName2 is not None, 'Please select a valid file'
+		assert fileName2 is not None, 'No file was selected. Please make sure that there is a PDF or text file in the directory of this script.'
 
 	fileNames.append(fileName2)
 
