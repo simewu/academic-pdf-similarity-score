@@ -8,13 +8,18 @@ import math
 import os
 import re
 import sys
+import shutil
+
 
 # Repair word-breaks, fix paragraphs, white-space, and normalize strange symbols
 improveFormatting = True
 removePublicationPrints = True
 
-supportsColor = importlib.machinery.SourceFileLoader('supportsColor','supports-color-python/supports_color/__init__.py').load_module()
-useTerminalColors = bool(supportsColor.supportsColor.stdout)
+try:
+	supportsColor = importlib.machinery.SourceFileLoader('supportsColor','supports-color-python/supports_color/__init__.py').load_module()
+	useTerminalColors = bool(supportsColor.supportsColor.stdout)
+except:
+	useTerminalColors = False
 
 # Gets filled with data values as the script runs
 stats = {'similar_words': 0, 'words_added': 0, 'words_removed': 0, 'file1_word_count': 0, 'file2_word_count': 0, 'file1_most_used_words': '', 'file2_most_used_words': ''}
@@ -152,7 +157,7 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 	global stats
 	wordlist = generateWordList('academic_wordlist.txt')
 	if verbose:
-		width, height = os.get_terminal_size()
+		width, height = shutil.get_terminal_size()
 
 	fileNames = []
 	while fileName1 is None or len(fileName1) == 0:
@@ -180,16 +185,20 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 			with open(fileName, 'r', encoding='utf8', errors='ignore') as file:
 				contents = file.read()
 		else:
-			with fitz.open(fileName) as doc:
-				for page in doc:
-					try:
-						page.clean_contents(sanitize=True)
-						numWords += len(page.get_text_words())
-						contents += page.get_text()
-					except AttributeError:
-						page._cleanContents()
-						numWords += len(page.getTextWords())
-						contents += page.getText()
+			try:
+				with fitz.open(fileName) as doc:
+					for page in doc:
+						try:
+							page.clean_contents(sanitize=True)
+							numWords += len(page.get_text_words())
+							contents += page.get_text()
+						except AttributeError:
+							page._cleanContents()
+							numWords += len(page.getTextWords())
+							contents += page.getText()
+			except fitz.fitz.EmptyFileError:
+				numWords = 0
+				contents = ''
 
 		if improveFormatting:
 			# Optimize until it cannot optimize any further
@@ -315,11 +324,12 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 		print(color('purple', 'black', f'Decrease similarity by scrolling up and reducing the white/similar words in the diff'.center(width)))
 	return similarity
 
-if len(sys.argv) == 3:
-	fileName1 = sys.argv[1]
-	fileName2 = sys.argv[2]
-	output = str(similarity(fileName1, fileName2, False))
-	print(output)
-else:
-	clearTerminal()
-	similarity()
+if __name__ == '__main__':
+	if len(sys.argv) == 3:
+		fileName1 = sys.argv[1]
+		fileName2 = sys.argv[2]
+		output = str(similarity(fileName1, fileName2, False))
+		print(output)
+	else:
+		clearTerminal()
+		similarity()

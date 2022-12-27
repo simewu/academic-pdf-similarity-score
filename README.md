@@ -16,21 +16,21 @@ similarity = similar_words / initial_word_count
 ## Usage
 To use the UI to select the PDF files with a verbose and pretty-printed output, including the word differences and the most occuring words, use:
 ```console
-python3 run.py
+python3 main.py
 ```
-(Windows users can double-click run.bat, and Linux users can double-click on run.sh).
+(Windows users can double-click main.bat, and Linux users can double-click on main.sh).
 
 To automate computing the similarity and only output the similarity score (for usage by a machine) use:
 ```console
-python3 run.py file1.pdf file2.pdf
+python3 main.py file1.pdf file2.pdf
 ```
 
 ## Example output:
 ```
-> python3 run.py example_1_bitcoin_nakamoto.pdf example_2_bitcoin_wright.pdf
+> python3 main.py example_1_bitcoin_nakamoto.pdf example_2_bitcoin_wright.pdf
 0.8582677165354331
 
-> python3 run.py
+> python3 main.py
 
 Select the baseline PDF/TXT file:
   File 1  -  example_1_bitcoin_nakamoto.pdf
