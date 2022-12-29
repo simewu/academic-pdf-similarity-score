@@ -284,11 +284,11 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 	#added = stats['words_added']
 	#removed = stats['words_removed']
 	similar = stats['similar_words']
-	if numDiffLines == 0:
+	if numDiffLines == 0: # Same contents --> 100% similarity
 		similar = max(baseline, primary)
 
 	if primary != 0 and baseline != 0:
-		similarity = max(similar / primary, similar / baseline)
+		similarity = similar / primary
 	else:
 		similarity = 0
 
@@ -314,9 +314,9 @@ def similarity(fileName1 = None, fileName2 = None, verbose = True):
 		print(color('yellow', 'purple', f'Removed words: {stats["words_removed"]}'.center(width)))
 		print(color('yellow', 'purple', f'Similar words: {stats["similar_words"]}'.center(width)))
 		print(color('white', 'purple', ''.center(width)))
-		print(color('cyan', 'purple', f'similar/primary: {similar/primary}'.center(width)))
-		print(color('cyan', 'purple', f'similar/baseline: {similar/baseline}'.center(width)))
-		print(color('cyan', 'purple', f'similarity = max(similar/primary, similar/baseline)'.center(width)))
+		print(color('cyan', 'purple', f'similar / primary: {similar/primary}'.center(width)))
+		print(color('cyan', 'purple', f'similar / baseline: {similar/baseline}'.center(width)))
+		print(color('cyan', 'purple', f'similarity = similar / primary'.center(width)))
 		print(color('white', 'purple', ('-' * len(similarity_str)).center(width)))
 		print(color('white', 'purple', similarity_str.center(width)))
 		print(color('white', 'purple', ('-' * len(similarity_str)).center(width)))

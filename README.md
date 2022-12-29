@@ -28,7 +28,7 @@ python3 main.py file1.pdf file2.pdf
 ## Example output:
 ```
 > python3 main.py example_1_bitcoin_nakamoto.pdf example_2_bitcoin_wright.pdf
-0.8582677165354331
+0.846662830840046
 
 > python3 main.py
 
@@ -61,11 +61,11 @@ Added words: 68
 Removed words: 21
 Similar words: 2943
 
-similar/primary: 0.846662830840046
-similar/baseline: 0.8582677165354331
-similarity = max(similar/primary, similar/baseline)
+similar / primary: 0.846662830840046
+similar / baseline: 0.8582677165354331
+similarity = similar / primary
 --------------------------------------------------
- Similarity score: 86% (0.8582677165354331 = red) 
+ Similarity score: 85% (0.846662830840046 = red) 
 --------------------------------------------------
 Decrease similarity by scrolling up and reducing the white/similar words in the diff
 ```
