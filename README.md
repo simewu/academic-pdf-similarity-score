@@ -76,5 +76,5 @@ For researchers, consider using the contents from file_2.txt (the primary PDF) t
 ## TODO
 - [ ] Add option to ignore quotes.
 - [ ] Add option to ignore citations/references.
-- [x] Cleanup early new breaks.
+- [x] Cleanup early line breaks.
 - [ ] Fix word-breaks not always being accurate (e.g. back-\ntracking --> back-tracking)
