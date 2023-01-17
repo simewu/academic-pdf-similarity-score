@@ -72,3 +72,9 @@ Decrease similarity by scrolling up and reducing the white/similar words in the 
 
 ## Additionally
 For researchers, consider using the contents from file_2.txt (the primary PDF) to further analyze the document, e.g., Microsoft Word has some text analysis tools under Review --> Editor, and Grammarly can catch typos.
+
+## TODO
+- [ ] Add option to ignore quotes.
+- [ ] Add option to ignore citations/references.
+- [x] Cleanup early new breaks.
+- [ ] Fix word-breaks not always being accurate (e.g. back-\ntracking --> back-tracking)
